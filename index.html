@@ -908,6 +908,94 @@
     }
     window.addEventListener('scroll', checkFunnyTriggers);
     document.addEventListener('DOMContentLoaded', checkFunnyTriggers);
+    // 1. Hero headline: split into words, animate staggered
+    const heroHeadline = document.querySelector('.hero-headline');
+    if (heroHeadline) {
+      const words = heroHeadline.textContent.trim().split(/\s+/);
+      heroHeadline.innerHTML = words.map(w => `<span class="hero-word">${w}</span>`).join(' ');
+      gsap.from('.hero-word', {
+        opacity: 0,
+        y: 40,
+        duration: 1.1,
+        stagger: 0.13,
+        ease: 'power3.out',
+        delay: 0.2
+      });
+    }
+    // 1b. Hero button bounce
+    gsap.from('.hero-cta', {opacity:0, scale:0.7, duration:0.8, delay:1.1, ease:'back.out(1.7)'});
+
+    // 2. About-list alternate slide-in
+    document.querySelectorAll('.about-list span').forEach((el, i) => {
+      ScrollReveal().reveal(el, {
+        distance: '30px',
+        origin: i % 2 === 0 ? 'left' : 'right',
+        opacity: 0,
+        duration: 700,
+        delay: 200 + i * 80,
+        easing: 'ease-in-out',
+        reset: false
+      });
+    });
+
+    // 3. Projects: zoom-in for images, fade-in for titles/descs
+    document.querySelectorAll('.project-card').forEach(card => {
+      const img = card.querySelector('.project-img');
+      const title = card.querySelector('.project-title');
+      const desc = card.querySelector('.project-desc');
+      if (img) ScrollReveal().reveal(img, {scale:0.8, opacity:0, duration:900, distance:'0px', delay:100, easing:'ease-in-out', reset:false});
+      if (title) ScrollReveal().reveal(title, {opacity:0, duration:700, distance:'20px', origin:'left', delay:300, reset:false});
+      if (desc) ScrollReveal().reveal(desc, {opacity:0, duration:700, distance:'20px', origin:'right', delay:400, reset:false});
+    });
+
+    // 4. Services: spin/pop for icons, color sweep for cards
+    document.querySelectorAll('.service-icon').forEach((icon, i) => {
+      ScrollReveal().reveal(icon, {
+        opacity:0, scale:0.5, rotate:90, duration:700, delay:100 + i*120, reset:false,
+        afterReveal: el => {
+          gsap.fromTo(el, {rotate:90, scale:0.5}, {rotate:0, scale:1, duration:0.5, ease:'back.out(2)'});
+        }
+      });
+    });
+    document.querySelectorAll('.service-card').forEach((card, i) => {
+      ScrollReveal().reveal(card, {
+        opacity:0, distance:'40px', origin:'bottom', duration:900, delay:200 + i*160, reset:false,
+        afterReveal: el => {
+          // Color sweep
+          const sweep = document.createElement('div');
+          sweep.style.position = 'absolute';
+          sweep.style.left = 0;
+          sweep.style.top = 0;
+          sweep.style.width = '100%';
+          sweep.style.height = '100%';
+          sweep.style.background = 'linear-gradient(90deg, var(--accent2), var(--accent))';
+          sweep.style.opacity = 0.18;
+          sweep.style.pointerEvents = 'none';
+          sweep.style.zIndex = 10;
+          sweep.style.borderRadius = 'inherit';
+          el.appendChild(sweep);
+          gsap.fromTo(sweep, {width:'0%'}, {width:'100%', duration:0.7, ease:'power2.out', onComplete:()=>sweep.remove()});
+        }
+      });
+    });
+
+    // 5. Contact: staggered fade-in for fields, pop for socials
+    document.querySelectorAll('.contact-form input, .contact-form textarea, .contact-form button').forEach((el, i) => {
+      ScrollReveal().reveal(el, {
+        opacity:0, distance:'20px', origin:'bottom', duration:700, delay:100 + i*80, reset:false
+      });
+    });
+    document.querySelectorAll('.contact-socials a').forEach((el, i) => {
+      ScrollReveal().reveal(el, {
+        opacity:0, scale:0.5, duration:600, delay:300 + i*100, reset:false,
+        afterReveal: el2 => {
+          gsap.fromTo(el2, {scale:0.5}, {scale:1, duration:0.4, ease:'back.out(2)'});
+        }
+      });
+    });
+
+    // 6. Footer fade-in
+    ScrollReveal().reveal('footer', {opacity:0, distance:'30px', origin:'bottom', duration:900, delay:200, reset:false});
   </script>
 </body>
 </html>
