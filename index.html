@@ -1275,17 +1275,22 @@
       // Register ScrollTrigger plugin
       gsap.registerPlugin(ScrollTrigger);
       
-      // Parallax effect for hero section
-      gsap.to('.hero', {
-        scrollTrigger: {
-          trigger: '.hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1
-        },
-        y: -100,
-        ease: 'none'
-      });
+      // Check if device is mobile
+      const isMobile = window.innerWidth <= 768;
+      
+      // Disable parallax on mobile for better performance
+      if (!isMobile) {
+        gsap.to('.hero', {
+          scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1
+          },
+          y: -100,
+          ease: 'none'
+        });
+      }
 
       // Animate nav links with rotation and color flicker
       gsap.from('.nav-links a', {
@@ -1341,13 +1346,13 @@
         gsap.from(heading, {
           scrollTrigger: {
             trigger: heading,
-            start: 'top 85%',
+            start: isMobile ? 'top 90%' : 'top 85%',
             toggleActions: 'play none none none',
           },
-          y: 40,
+          y: isMobile ? 20 : 40,
           opacity: 0,
-          rotationY: 15,
-          duration: 0.9,
+          rotationY: isMobile ? 0 : 15,
+          duration: isMobile ? 0.6 : 0.9,
           ease: 'power3.out',
           delay: i * 0.1
         });
@@ -1357,12 +1362,12 @@
       gsap.from('.about-bio', {
         scrollTrigger: {
           trigger: '.about-simple',
-          start: 'top 85%',
+          start: isMobile ? 'top 90%' : 'top 85%',
           toggleActions: 'play none none none',
         },
-        y: 30,
+        y: isMobile ? 15 : 30,
         opacity: 0,
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: 'power2.out'
       });
 
@@ -1370,14 +1375,14 @@
       gsap.from('.about-badge', {
         scrollTrigger: {
           trigger: '.about-badges',
-          start: 'top 90%',
+          start: isMobile ? 'top 95%' : 'top 90%',
           toggleActions: 'play none none none',
         },
-        y: 20,
+        y: isMobile ? 10 : 20,
         opacity: 0,
-        scale: 0.8,
-        stagger: 0.08,
-        duration: 0.6,
+        scale: isMobile ? 0.9 : 0.8,
+        stagger: isMobile ? 0.05 : 0.08,
+        duration: isMobile ? 0.4 : 0.6,
         ease: 'back.out(1.7)'
       });
 
@@ -1386,30 +1391,32 @@
         gsap.from(card, {
           scrollTrigger: {
             trigger: card,
-            start: 'top 90%',
+            start: isMobile ? 'top 95%' : 'top 90%',
             toggleActions: 'play none none none',
           },
-          y: 60,
+          y: isMobile ? 30 : 60,
           opacity: 0,
-          rotationY: 20,
-          duration: 0.8,
-          delay: i * 0.15,
+          rotationY: isMobile ? 0 : 20,
+          duration: isMobile ? 0.5 : 0.8,
+          delay: i * (isMobile ? 0.1 : 0.15),
           ease: 'power3.out'
         });
         
-        // Project image parallax effect
-        const image = card.querySelector('.project-image');
-        if (image) {
-          gsap.to(image, {
-            scrollTrigger: {
-              trigger: card,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1
-            },
-            scale: 1.1,
-            ease: 'none'
-          });
+        // Project image parallax effect (disabled on mobile)
+        if (!isMobile) {
+          const image = card.querySelector('.project-image');
+          if (image) {
+            gsap.to(image, {
+              scrollTrigger: {
+                trigger: card,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1
+              },
+              scale: 1.1,
+              ease: 'none'
+            });
+          }
         }
       });
 
@@ -1418,15 +1425,15 @@
         gsap.from(card, {
           scrollTrigger: {
             trigger: card,
-            start: 'top 92%',
+            start: isMobile ? 'top 95%' : 'top 92%',
             toggleActions: 'play none none none',
           },
-          y: 50,
+          y: isMobile ? 25 : 50,
           opacity: 0,
-          scale: 0.85,
-          rotationX: 15,
-          duration: 0.8,
-          delay: i * 0.1,
+          scale: isMobile ? 0.9 : 0.85,
+          rotationX: isMobile ? 0 : 15,
+          duration: isMobile ? 0.5 : 0.8,
+          delay: i * (isMobile ? 0.05 : 0.1),
           ease: 'power2.out'
         });
         
@@ -1436,25 +1443,27 @@
           gsap.from(icon, {
             scrollTrigger: {
               trigger: card,
-              start: 'top 92%',
+              start: isMobile ? 'top 95%' : 'top 92%',
               toggleActions: 'play none none none',
             },
-            y: -40,
+            y: isMobile ? -20 : -40,
             opacity: 0,
-            scale: 0.5,
-            duration: 0.8,
+            scale: isMobile ? 0.7 : 0.5,
+            duration: isMobile ? 0.5 : 0.8,
             delay: 0.2,
             ease: 'bounce.out'
           });
         }
         
-        // Floating hover effect
-        card.addEventListener('mouseenter', () => {
-          gsap.to(card, {y: -8, boxShadow: '0 12px 40px rgba(165,180,252,0.25)', duration: 0.4, ease: 'power2.out'});
-        });
-        card.addEventListener('mouseleave', () => {
-          gsap.to(card, {y: 0, boxShadow: '', duration: 0.4, ease: 'power2.out'});
-        });
+        // Floating hover effect (disabled on mobile)
+        if (!isMobile) {
+          card.addEventListener('mouseenter', () => {
+            gsap.to(card, {y: -8, boxShadow: '0 12px 40px rgba(165,180,252,0.25)', duration: 0.4, ease: 'power2.out'});
+          });
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, {y: 0, boxShadow: '', duration: 0.4, ease: 'power2.out'});
+          });
+        }
       });
 
       // Pricing Cards with enhanced scroll effects
@@ -1462,42 +1471,44 @@
         gsap.from(card, {
           scrollTrigger: {
             trigger: card,
-            start: 'top 90%',
+            start: isMobile ? 'top 95%' : 'top 90%',
             toggleActions: 'play none none none',
           },
-          y: 60,
+          y: isMobile ? 30 : 60,
           opacity: 0,
-          scale: 0.9,
-          rotationY: 25,
-          duration: 0.9,
-          delay: i * 0.12,
+          scale: isMobile ? 0.95 : 0.9,
+          rotationY: isMobile ? 0 : 25,
+          duration: isMobile ? 0.5 : 0.9,
+          delay: i * (isMobile ? 0.08 : 0.12),
           ease: 'power3.out'
         });
         
-        // Price number counting animation
+        // Price number counting animation (simplified on mobile)
         const price = card.querySelector('.pricing-price');
         if (price) {
           const originalText = price.textContent;
-          price.textContent = '₹0';
-          
-          gsap.to(price, {
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 90%',
-              toggleActions: 'play none none none',
-            },
-            duration: 2,
-            delay: 0.5,
-            ease: 'power2.out',
-            onUpdate: function() {
-              const progress = this.progress();
-              const number = Math.floor(parseInt(originalText.replace(/[^\d]/g, '')) * progress);
-              price.textContent = originalText.replace(/\d+/, number);
-            },
-            onComplete: function() {
-              price.textContent = originalText;
-            }
-          });
+          if (!isMobile) {
+            price.textContent = '₹0';
+            
+            gsap.to(price, {
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 90%',
+                toggleActions: 'play none none none',
+              },
+              duration: 2,
+              delay: 0.5,
+              ease: 'power2.out',
+              onUpdate: function() {
+                const progress = this.progress();
+                const number = Math.floor(parseInt(originalText.replace(/[^\d]/g, '')) * progress);
+                price.textContent = originalText.replace(/\d+/, number);
+              },
+              onComplete: function() {
+                price.textContent = originalText;
+              }
+            });
+          }
         }
       });
 
@@ -1505,27 +1516,27 @@
       gsap.from('.contact-form', {
         scrollTrigger: {
           trigger: '.contact-form',
-          start: 'top 90%',
+          start: isMobile ? 'top 95%' : 'top 90%',
           toggleActions: 'play none none none',
         },
-        y: 50,
+        y: isMobile ? 25 : 50,
         opacity: 0,
-        scale: 0.95,
-        rotationX: 10,
-        duration: 0.9,
+        scale: isMobile ? 0.98 : 0.95,
+        rotationX: isMobile ? 0 : 10,
+        duration: isMobile ? 0.5 : 0.9,
         ease: 'power3.out'
       });
       
       gsap.from('.contact-form input, .contact-form textarea, .contact-form button', {
         scrollTrigger: {
           trigger: '.contact-form',
-          start: 'top 90%',
+          start: isMobile ? 'top 95%' : 'top 90%',
           toggleActions: 'play none none none',
         },
-        y: 30,
+        y: isMobile ? 15 : 30,
         opacity: 0,
-        stagger: 0.15,
-        duration: 0.7,
+        stagger: isMobile ? 0.1 : 0.15,
+        duration: isMobile ? 0.4 : 0.7,
         delay: 0.3,
         ease: 'power2.out'
       });
@@ -1534,14 +1545,14 @@
       gsap.from('.contact-socials a', {
         scrollTrigger: {
           trigger: '.contact-socials',
-          start: 'top 95%',
+          start: isMobile ? 'top 98%' : 'top 95%',
           toggleActions: 'play none none none',
         },
-        y: 20,
+        y: isMobile ? 10 : 20,
         opacity: 0,
-        scale: 0.8,
-        stagger: 0.1,
-        duration: 0.6,
+        scale: isMobile ? 0.9 : 0.8,
+        stagger: isMobile ? 0.05 : 0.1,
+        duration: isMobile ? 0.4 : 0.6,
         delay: 0.2,
         ease: 'back.out(1.7)'
       });
@@ -1557,53 +1568,57 @@
       gsap.from('footer', {
         scrollTrigger: {
           trigger: 'footer',
-          start: 'top 98%',
+          start: isMobile ? 'top 99%' : 'top 98%',
           toggleActions: 'play none none none',
         },
-        y: 40,
+        y: isMobile ? 20 : 40,
         opacity: 0,
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: 'power2.out'
       });
       
-      // Footer socials floating effect
-      document.querySelectorAll('.footer-socials a').forEach((icon, i) => {
-        gsap.from(icon, {
-          scrollTrigger: {
-            trigger: 'footer',
-            start: 'top 98%',
-            toggleActions: 'play none none none',
-          },
-          y: 15,
-          opacity: 0,
-          scale: 0.8,
-          duration: 0.6,
-          delay: 0.3 + i * 0.1,
-          ease: 'back.out(1.7)'
+      // Footer socials floating effect (disabled on mobile)
+      if (!isMobile) {
+        document.querySelectorAll('.footer-socials a').forEach((icon, i) => {
+          gsap.from(icon, {
+            scrollTrigger: {
+              trigger: 'footer',
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+            },
+            y: 15,
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.6,
+            delay: 0.3 + i * 0.1,
+            ease: 'back.out(1.7)'
+          });
+          
+          // Gentle floating
+          gsap.to(icon, {
+            y: '+=8',
+            repeat: -1,
+            yoyo: true,
+            duration: 2.5 + Math.random() * 1,
+            ease: 'sine.inOut',
+            delay: 1 + i * 0.2
+          });
         });
-        
-        // Gentle floating
-        gsap.to(icon, {
-          y: '+=8',
-          repeat: -1,
-          yoyo: true,
-          duration: 2.5 + Math.random() * 1,
-          ease: 'sine.inOut',
-          delay: 1 + i * 0.2
-        });
-      });
+      }
 
-      // Scroll-triggered background animation
-      gsap.to('.bg-animated', {
-        scrollTrigger: {
-          trigger: 'body',
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1
-        },
-        opacity: 0.3,
-        ease: 'none'
-      });
+      // Scroll-triggered background animation (disabled on mobile)
+      if (!isMobile) {
+        gsap.to('.bg-animated', {
+          scrollTrigger: {
+            trigger: 'body',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1
+          },
+          opacity: 0.3,
+          ease: 'none'
+        });
+      }
     });
     // Minimal animated background (binary rain)
     const canvas = document.querySelector('.bg-animated');
